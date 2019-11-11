@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+
+from flask import Flask, escape, request, jsonify
+import json
+import sys
+import requests
+import os
+
+lista=sys.argv
+
+endereco=os.environ['SERVIDORAPS']
+
+def adicionar(name, size):
+    response = requests.post(endereco+"/Tarefa/",data={"name":name,"size":size})
+    print(response.text)
+
+def listar():
+    response = requests.get(endereco+"/Tarefa/")
+    print(response.text)
+
+def buscar(tarefa_id):
+    response = requests.get(endereco+"/Tarefa/"+tarefa_id)
+    print(response.text)
+
+def apagar(tarefa_id):
+    response = requests.delete(endereco+"/Tarefa/"+tarefa_id)
+    print(response.text)
+
+def atualizar(tarefa_id, name, size):
+    response = requests.put(endereco+"/Tarefa/"+tarefa_id,data={"name":name,"size":size})
+    print(response.text)
+
+def tutorial():
+    print("""
+    Funções disponíveis:
+        adicionar    adiciona uma nova tarefa
+        listar       lista todas as tarefas presentes
+        buscar       procura uma tarefa específica pelo ID
+        apagar       apaga uma tarefa específica pelo ID
+        atualizar    atualiza uma tarefa específica pelo ID
+    
+    Como usar:
+        adicionar   : tarefa adicionar <NOME> <TAMANHO>
+        listar      : tarefa listar
+        buscar      : tarefa buscar <TAREFA_ID>
+        apagar      : tarefa apagar <TAREFA_ID>
+        atualizar   : tarefa autalizar <TAREFA_ID> <NOME> <TAMANHO>
+    """)
+
+
+
+
+
+if lista[1] == "adicionar":
+    adicionar(lista[2], lista[3])
+
+
+elif lista[1] == "listar":
+    listar()
+
+elif lista[1] == "buscar":
+    buscar(lista[2])
+
+elif lista[1] == "apagar":
+    apagar(lista[2])
+
+elif lista[1] == "atualizar":
+    atualizar(lista[2], lista[3], lista[4])
+
+elif lista[1] == "help":
+    tutorial()    
+else:
+    print("tarefa não reconhecida - use tarefa help para mais informações")
